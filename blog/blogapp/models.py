@@ -51,3 +51,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     # Связь с тегом
     tags = models.ManyToManyField(Tag)
+    # Картинка
+    # 2 варианта хранения кратинки (1 - в базе, 2 - на диске)
+    image = models.ImageField(upload_to='posts', null=True, blank=True)
+
