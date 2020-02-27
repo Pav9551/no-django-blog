@@ -1,8 +1,22 @@
 from django.db import models
 
+# 3 типа наследования: abstract, классическое, proxy
+
+
+class TimeStamp(models.Model):
+    """
+    Abstract - для нее не создаются новые таблицы
+    данные хранятся в каждом наследнике
+    """
+    create = models.DateTimeField(auto_now_add=True)
+    update = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
 
 # Create your models here.
-class Category(models.Model):
+class Category(TimeStamp):
     # Id не надо, он уже сам появиться
     name = models.CharField(max_length=16, unique=True)
     description = models.TextField(blank=True)
@@ -41,11 +55,9 @@ class Tag(models.Model):
         return self.name
 
 
-class Post(models.Model):
+class Post(TimeStamp):
     name = models.CharField(max_length=32, unique=True)
     text = models.TextField()
-    create = models.DateTimeField(auto_now_add=True)
-    update = models.DateTimeField(auto_now=True)
     # Связь с категорией
     # один - много
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -55,3 +67,16 @@ class Post(models.Model):
     # 2 варианта хранения кратинки (1 - в базе, 2 - на диске)
     image = models.ImageField(upload_to='posts', null=True, blank=True)
 
+
+# Класское наследование
+class CoreObject(models.Model):
+    name = models.CharField(max_length=32)
+
+
+class Car(CoreObject):
+    # является
+    description = models.TextField()
+
+
+class Toy(CoreObject):
+    text = models.TextField()
