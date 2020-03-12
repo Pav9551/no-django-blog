@@ -1,4 +1,5 @@
 from django.db import models
+from usersapp.models import BlogUser
 
 # 3 типа наследования: abstract, классическое, proxy
 
@@ -18,8 +19,12 @@ class TimeStamp(models.Model):
 # Create your models here.
 class Category(TimeStamp):
     # Id не надо, он уже сам появиться
-    name = models.CharField(max_length=16, unique=True)
-    description = models.TextField(blank=True)
+    name = models.CharField(max_length=16, unique=True, verbose_name='Name')
+    description = models.TextField(blank=True, verbose_name='Desc')
+
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
 
     # Основные типы полей
     # дата
@@ -66,6 +71,7 @@ class Post(TimeStamp):
     # Картинка
     # 2 варианта хранения кратинки (1 - в базе, 2 - на диске)
     image = models.ImageField(upload_to='posts', null=True, blank=True)
+    user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
 
 
 # Класское наследование

@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -38,11 +40,14 @@ def contact_view(request):
         return render(request, 'blogapp/contact.html', context={'form': form})
 
 
+# можт читать только админ
+@user_passes_test(lambda u: u.is_superuser)
 def post(request, id):
     post = get_object_or_404(Post, id=id)
     return render(request, 'blogapp/post.html', context={'post': post})
 
 
+@login_required
 def create_post(request):
     if request.method == 'GET':
         form = PostForm()
@@ -50,6 +55,8 @@ def create_post(request):
     else:
         form = PostForm(request.POST, files=request.FILES)
         if form.is_valid():
+            # Добавить в форму текущего пользователя request.user - текущий пользователь
+            form.instance.user = request.user
             form.save()
             return HttpResponseRedirect(reverse('blog:index'))
         else:
@@ -86,9 +93,13 @@ class TagListView(ListView, NameContextMixin):
 
 
 # детальная информация
-class TagDetailView(DetailView, NameContextMixin):
+class TagDetailView(UserPassesTestMixin, DetailView, NameContextMixin):
     model = Tag
     template_name = 'blogapp/tag_detail.html'
+    raise_exception = False
+
+    def test_func(self):
+        return self.request.user.is_superuser
 
     def get(self, request, *args, **kwargs):
         """
@@ -111,7 +122,8 @@ class TagDetailView(DetailView, NameContextMixin):
 
 
 # создание тега
-class TagCreateView(CreateView, NameContextMixin):
+# Важно LoginRequiredMixin - он должен идти 1-ым
+class TagCreateView(LoginRequiredMixin, CreateView, NameContextMixin):
     # form_class =
     fields = '__all__'
     model = Tag
@@ -134,6 +146,8 @@ class TagCreateView(CreateView, NameContextMixin):
         :param form:
         :return:
         """
+        # self.request.user - текущий пользователь
+        # form.instance.user = self.request.user
         return super().form_valid(form)
 
 
