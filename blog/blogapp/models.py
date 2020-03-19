@@ -1,6 +1,7 @@
 from django.db import models
 from usersapp.models import BlogUser
 
+
 # 3 типа наследования: abstract, классическое, proxy
 
 
@@ -72,6 +73,17 @@ class Post(TimeStamp):
     # 2 варианта хранения кратинки (1 - в базе, 2 - на диске)
     image = models.ImageField(upload_to='posts', null=True, blank=True)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
+
+    def has_image(self):
+        # print('my image:', self.image)
+        # print('type', type(self.image))
+        return bool(self.image)
+
+    def some_method(self):
+        return 'hello from method'
+
+    def __str__(self):
+        return f'{self.name}, category: {self.category.name}'
 
 
 # Класское наследование
