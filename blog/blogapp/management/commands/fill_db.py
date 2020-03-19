@@ -59,3 +59,5 @@ class Command(BaseCommand):
         category.delete()
         # можно несколько
         # Category.objects.all().delete()
+
+        print(category.has_image())
