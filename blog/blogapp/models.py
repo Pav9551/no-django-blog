@@ -3,6 +3,29 @@ from usersapp.models import BlogUser
 
 
 # 3 типа наследования: abstract, классическое, proxy
+class ActiveManager(models.Manager):
+
+    def get_queryset(self):
+        all_objects = super().get_queryset()
+        return all_objects.filter(is_active=True)
+
+
+class IsActiveMixin(models.Model):
+    objects = models.Manager()
+    active_objects = ActiveManager()
+    is_active = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
+
+
+# class UpdatedObjectsManager(models.Manager):
+#
+#     def get_queryset(self):
+#         all_objects = super().get_queryset()
+#         # Дата обновления не равна дата содания F - запрос
+          # return all_objects.filter(update=F('create'))
 
 
 class TimeStamp(models.Model):
@@ -54,19 +77,22 @@ class Category(TimeStamp):
         return self.name
 
 
-class Tag(models.Model):
+
+
+
+class Tag(IsActiveMixin):
     name = models.CharField(max_length=16, unique=True)
 
     def __str__(self):
         return self.name
 
 
-class Post(TimeStamp):
+class Post(TimeStamp, IsActiveMixin):
     name = models.CharField(max_length=32, unique=True)
     text = models.TextField()
     # Связь с категорией
     # один - много
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_posts')
     # Связь с тегом
     tags = models.ManyToManyField(Tag)
     # Картинка
