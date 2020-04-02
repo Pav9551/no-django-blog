@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Главная
+Главная
 {% endblock %}
 
 {% block content %}
 <div class="row">
+    Количество постов на странице: {{posts|length}}
     <div class="col-lg-8 col-md-10 mx-auto">
         {% for item in posts %}
         <div class="post-preview">
@@ -20,11 +21,11 @@
             <p class="post-meta">Posted by
                 <a href="#">Start Bootstrap</a>
                 on September 24, 2019.
-            {% if item.has_image %}
+                {% if item.has_image %}
                 Есть картинка
                 {% else%}
                 Нет картинки
-            {% endif %}
+                {% endif %}
                 {{item.has_image}}
                 {{item.some_method}}
             </p>
@@ -32,9 +33,33 @@
         <hr>
         {% endfor %}
         <!-- Pager -->
+
         <div class="clearfix">
-            <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+            <div class="pagination">
+
+            <span class="step-links">
+                {% if posts.has_previous %}
+                    <a href="?page={{ posts.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+                </span>
+
+                {% if posts.has_next %}
+{#               <a href="?page={{ posts.next_page_number }}">next</a> #}
+
+
+                    <a class="btn btn-primary float-right"
+                       href="?page={{ posts.next_page_number }}">Older Posts &rarr;</a>
+
+                {% endif %}
+
+
+            </span>
+            </div>
         </div>
+
     </div>
 </div>
 {% endblock %}
