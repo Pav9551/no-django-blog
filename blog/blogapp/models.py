@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import F
+from django.utils.functional import cached_property
+
 from usersapp.models import BlogUser
 
 
@@ -19,13 +22,12 @@ class IsActiveMixin(models.Model):
         abstract = True
 
 
+class UpdatedObjectsManager(models.Manager):
 
-# class UpdatedObjectsManager(models.Manager):
-#
-#     def get_queryset(self):
-#         all_objects = super().get_queryset()
-#         # Дата обновления не равна дата содания F - запрос
-          # return all_objects.filter(update=F('create'))
+    def get_queryset(self):
+        all_objects = super().get_queryset()
+        # Дата обновления не равна дата содания F - запрос
+        return all_objects.filter(update=F('create'))
 
 
 class TimeStamp(models.Model):
@@ -34,7 +36,7 @@ class TimeStamp(models.Model):
     данные хранятся в каждом наследнике
     """
     create = models.DateTimeField(auto_now_add=True)
-    update = models.DateTimeField(auto_now=True)
+    update = models.DateTimeField(auto_now=True, db_index=True)
 
     class Meta:
         abstract = True
@@ -77,9 +79,6 @@ class Category(TimeStamp):
         return self.name
 
 
-
-
-
 class Tag(IsActiveMixin):
     name = models.CharField(max_length=16, unique=True)
 
@@ -100,6 +99,11 @@ class Post(TimeStamp, IsActiveMixin):
     image = models.ImageField(upload_to='posts', null=True, blank=True)
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(default=1)
+
+    @cached_property
+    def get_all_tags(self):
+        tags = Tag.objects.all()
+        return tags
 
     def has_image(self):
         # print('my image:', self.image)
