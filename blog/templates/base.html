@@ -127,7 +127,12 @@
                         </a>
                     </li>
                 </ul>
-                <p class="copyright text-muted">{{joke}}</p>
+
+                <p class="copyright text-muted">
+                    <button type="button" id="btn-joke" class="btn-info">
+                    {{joke}}
+                </button>
+                </p>
             </div>
         </div>
     </div>
@@ -137,6 +142,7 @@
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/clean-blog.min.js' %}"></script>
+<script src="{% static 'js/my.js' %}"></script>
 
 </body>
 
