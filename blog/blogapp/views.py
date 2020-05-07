@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.generic.base import ContextMixin
 
 from .models import Post, Tag, Category
@@ -216,3 +216,7 @@ class PostCategoryCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('blog:category_detail', kwargs={'pk': self.category_pk})
+
+
+class SimpleMainAjax(TemplateView):
+    template_name = 'blogapp/simple.html'
