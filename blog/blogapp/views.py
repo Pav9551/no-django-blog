@@ -17,7 +17,7 @@ def create_post(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            # Получить данные из форы
+            # Получить данные из формы
             name = form.cleaned_data['name']
             message = form.cleaned_data['message']
             email = form.cleaned_data['email']
@@ -29,7 +29,7 @@ def create_post(request):
                 [email],
                 fail_silently=True,
             )
-
+            print(email)
             return HttpResponseRedirect(reverse('blog:index'))
         else:
             return render(request, 'blogapp/create.html', context={'form': form})
