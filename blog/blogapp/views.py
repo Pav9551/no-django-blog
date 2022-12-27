@@ -5,3 +5,6 @@ posts = Post.objects.all()
 def main_view(request):
     return render(request, 'blogapp/index.html', context = {'posts': posts})
 
+
+def create_post(request):
+    return render(request, 'blogapp/create.html')
