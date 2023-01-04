@@ -1,10 +1,11 @@
 
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse
-
-from .models import Post
-from .forms import ContactForm
+from django.views.generic import ListView, DetailView
+from .models import Post, Tag
+from .forms import ContactForm, PostForm
 from django.core.mail import send_mail
+
 
 
 # Create your views here.
@@ -13,7 +14,7 @@ def main_view(request):
     return render(request, 'blogapp/index.html', context={'posts': posts})
 
 
-def create_post(request):
+def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -32,12 +33,30 @@ def create_post(request):
             print(email)
             return HttpResponseRedirect(reverse('blog:index'))
         else:
-            return render(request, 'blogapp/create.html', context={'form': form})
+            return render(request, 'blogapp/contact.html', context={'form': form})
     else:
         form = ContactForm()
-        return render(request, 'blogapp/create.html', context={'form': form})
-
+        return render(request, 'blogapp/contact.html', context={'form': form})
 
 def post(request, id):
     post = get_object_or_404(Post, id=id)
     return render(request, 'blogapp/post.html', context={'post': post})
+def create_post(request):
+    if request.method == 'GET':
+        form = PostForm()
+        return render(request, 'blogapp/create.html', context={'form': form})
+    else:
+        form = PostForm(request.POST, files = request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('blog:index'))
+        else:
+            return render(request, 'blogapp/create.html', context={'form': form})
+class TagListView(ListView):
+    model = Tag
+    template_name = 'blogapp/tag_list.html'
+class TegDetailView(DetailView):
+    model = Tag
+    template_name = 'blogapp/tag_detail.html'
+
+
