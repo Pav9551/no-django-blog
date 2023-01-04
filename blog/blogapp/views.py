@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from django.urls import reverse
-from django.views.generic import ListView, DetailView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Tag
 from .forms import ContactForm, PostForm
 from django.core.mail import send_mail
@@ -58,5 +58,20 @@ class TagListView(ListView):
 class TegDetailView(DetailView):
     model = Tag
     template_name = 'blogapp/tag_detail.html'
+#создание поста
+class TagCreateView(CreateView):
+    fields = '__all__'
+    model = Tag
+    success_url = reverse_lazy('blog:tag_list')
+    template_name = 'blogapp/tag_create.html'
+class TagUpdateView(UpdateView):
+    fields = '__all__'
+    model = Tag
+    success_url = reverse_lazy('blog:tag_list')
+    template_name = 'blogapp/tag_create.html'
+class TagDeleteView(DeleteView):
+    model = Tag
+    success_url = reverse_lazy('blog:tag_list')
+    template_name = 'blogapp/tag_delete_confirm.html'
 
 
