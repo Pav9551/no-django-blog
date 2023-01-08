@@ -89,6 +89,7 @@ class TagListView(ListView, NameContextMixin):
 class TagDetailView(DetailView, NameContextMixin):
     model = Tag
     template_name = 'blogapp/tag_detail.html'
+    context_object_name = ''
 
     def get(self, request, *args, **kwargs):
         """
