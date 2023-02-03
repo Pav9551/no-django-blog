@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Логин
+Регистрация
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Войти</button>
+            <button type="submit" class="btn btn-primary">Регистрация</button>
         </form>
     </div>
 </div>
