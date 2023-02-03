@@ -44,7 +44,10 @@ class Category(TimeStamp):
     # # url, email
     # models.URLField
     # models.EmailField
-
+    user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
     def __str__(self):
         return self.name
 
@@ -67,10 +70,7 @@ class Post(TimeStamp):
     # Картинка
     # 2 варианта хранения кратинки (1 - в базе, 2 - на диске)
     image = models.ImageField(upload_to='posts', null=True, blank=True)
-    user = models.ForeignKey(BlogUser, on_delete=models.CASCADE)
-    class Meta:
-        verbose_name = 'category'
-        verbose_name_plural = 'categories'
+
 
 
 
