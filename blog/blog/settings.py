@@ -128,3 +128,10 @@ EMAIL_FILE_PATH = '/tmp/emails'
 
 # Переназначение модели пользователя
 AUTH_USER_MODEL = 'usersapp.BlogUser'
+#Переходы
+#Куда идти после логина
+LOGIN_REDIRECT_URL = '/'
+#Куда идти после выхода
+LOGOUT_REDIRECT_URL = '/'
+#Куда идти на логин
+LOGIN_URL = '/user/login/'
